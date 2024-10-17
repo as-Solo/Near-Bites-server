@@ -26,9 +26,9 @@ router.get("/:restaurantId", async (req, res, next)=>{
 
 // POST "/api/restaurants" => Crear un restaurante
 router.post("/", async (req, res, next)=>{
-    const {profileImage, images, name, coords, address, city, country, zip_code, categories, capacity, timeSlots, isDiscount, discountAmount} = req.body
+    const {profileImage, images, name, coords, price, address, city, country, zip_code, categories, capacity, timeSlots, isDiscount, discountAmount} = req.body
     try {
-        const response = await Restaurant.create({profileImage, images, name, coords, address, city, country, zip_code, categories, capacity, timeSlots, isDiscount, discountAmount});
+        const response = await Restaurant.create({profileImage, images, name, coords, price, address, city, country, zip_code, categories, capacity, timeSlots, isDiscount, discountAmount});
         res.json({message: `El restaurante ${response.name} ha sido creado`})
     } catch (error) {
         console.log(error);
@@ -59,4 +59,27 @@ router.delete("/:restaurantId", async (req, res, next)=>{
     }
 })
 
+// GET "/api/restaurants/:longitude/:latitude/:distance/:limit"
+router.get("/:longitude/:latitude/:distance/:limit", async (req, res, next)=>{
+    try {
+        const {longitude, latitude, distance, limit} = req.params
+        const response = await Restaurant.find({
+            coords: {
+              $near: {
+                $geometry: {
+                  type: "Point",
+                  coordinates: [longitude, latitude]
+                },
+                $maxDistance: distance // el valor son metros
+              }
+            }
+          })
+          .limit(limit)
+        res.json(response)
+        
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
 module.exports = router

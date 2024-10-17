@@ -26,9 +26,9 @@ router.get('/:reviewId', async (req, res, next)=>{
 
 // POST "/api/reviews" => Crear una reseña
 router.post('/', async (req, res, next)=>{
-    const { description, user, restaurant } = req.body
+    const { description, rating, user, restaurant } = req.body
     try {
-        const response = await Review.create({description, user, restaurant})
+        const response = await Review.create({description, rating, user, restaurant})
         res.json(response);
     } catch (error) {
         console.log(error)

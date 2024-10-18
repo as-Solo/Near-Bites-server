@@ -39,6 +39,13 @@ router.post("/", async (req, res, next)=>{
 // PATCH "/api/users/:userId" => Editar un usuario en concreto
 router.patch("/:userId", async (req, res, next)=>{
     const { email, password, name, lastname, username, image } = req.body
+    if (username){
+        const foundUser = User.findOne({username:username})
+        if (foundUser){
+            res.status(400).json({message: "Ese usuario ya existe"});
+            return;
+        }
+    }
     try {
         const response = await User.findByIdAndUpdate(req.params.userId, {email, password, name, lastname, username, image},{new:true})
         res.json(response)

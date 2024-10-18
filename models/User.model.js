@@ -5,13 +5,13 @@ const userSchema = new Schema(
   {
     email: {type: String, required: [true, 'Email is required.'], unique: true, lowercase: true, trim: true},
     password: {type: String, required: [true, 'Password is required.']},
-    name: {type: String, trim: true},
-    lastname: {type: String, trim: true},
-    username: {type: String, unique: true, trim: true, required: [true, 'Username is required.']},
+    name: {type: String, trim: true, default:""},
+    lastname: {type: String, trim: true, default:""},
+    username: {type: String, unique: true, trim: true, required: [true, 'Username is required.'], default:""},
     image: {type: String, trim: true},
     coords: [String],
     rol: {type: String, enum:["user", "owner"], default: "user"},
-    favourites: { type: [Schema.Types.ObjectId], ref: "Restaurant" },
+    favourites: { type: [Schema.Types.ObjectId], ref: "Restaurant", default:[]},
     restaurantOwned: {type: [Schema.Types.ObjectId], ref: "Restaurant", default: []}
   },
   {

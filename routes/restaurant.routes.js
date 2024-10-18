@@ -26,9 +26,9 @@ router.get("/:restaurantId", async (req, res, next)=>{
 
 // POST "/api/restaurants" => Crear un restaurante
 router.post("/", async (req, res, next)=>{
-    const {profileImage, images, name, coords, price, address, city, country, zip_code, categories, capacity, timeSlots, isDiscount, discountAmount} = req.body
+    const {profileImage, images, name, description, coords, rating, price, address, city, country, zip_code, categories, capacity, timeSlots, isDiscount, discountAmount} = req.body
     try {
-        const response = await Restaurant.create({profileImage, images, name, coords, price, address, city, country, zip_code, categories, capacity, timeSlots, isDiscount, discountAmount});
+        const response = await Restaurant.create({profileImage, images, name, description, coords, rating, price, address, city, country, zip_code, categories, capacity, timeSlots, isDiscount, discountAmount});
         res.json({message: `El restaurante ${response.name} ha sido creado`})
     } catch (error) {
         console.log(error);
@@ -38,9 +38,9 @@ router.post("/", async (req, res, next)=>{
 
 // PATCH "/api/restaurants/:restaurantId" => Editar un restaurante
 router.patch("/:restaurantId", async (req, res, next)=>{
-    const {profileImage, images, name, coords, address, city, country, zip_code, categories, capacity, timeSlots, isDiscount, discountAmount} = req.body
+    const {profileImage, images, name, description, coords, rating, address, city, country, zip_code, categories, capacity, timeSlots, isDiscount, discountAmount} = req.body
     try {
-        const response = await Restaurant.findByIdAndUpdate(req.params.restaurantId, {profileImage, images, name, coords, address, city, country, zip_code, categories, capacity, timeSlots, isDiscount, discountAmount}, {new:true})
+        const response = await Restaurant.findByIdAndUpdate(req.params.restaurantId, {profileImage, images, name, description, coords, rating, address, city, country, zip_code, categories, capacity, timeSlots, isDiscount, discountAmount}, {new:true})
         res.json({message: `${response.name} ha sido actualizado con éxito`})
     } catch (error) {
         console.log(error);

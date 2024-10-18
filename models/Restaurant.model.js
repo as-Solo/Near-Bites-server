@@ -5,6 +5,7 @@ const userSchema = new Schema(
     profileImage: {type: String, trim: true},
     images: {type: [String], trim: true},
     name: {type: String, trim: true, required: true},
+    description: {type: String, trim: true},
     coords: {type: [Number], index: "2dsphere", unique: true, trim: true},
     rating: {type: Number, default:0},
     price: {type: Number},

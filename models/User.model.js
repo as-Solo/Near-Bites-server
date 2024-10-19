@@ -12,6 +12,7 @@ const userSchema = new Schema(
     coords: [String],
     rol: {type: String, enum:["user", "owner"], default: "user"},
     favourites: { type: [Schema.Types.ObjectId], ref: "Restaurant", default:[]},
+    wishlist: { type: [Schema.Types.ObjectId], ref: "Restaurant", default:[]},
     restaurantOwned: {type: [Schema.Types.ObjectId], ref: "Restaurant", default: []}
   },
   {

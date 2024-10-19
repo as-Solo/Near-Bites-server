@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
 const Restaurant = require("../models/Restaurant.model");
+const verifyToken = require("../middlewares/auth.middlewares");
 
 // GET "/api/restaurants" => Ver todos los restaurantes
 router.get("/", async (req, res, next)=>{
@@ -95,7 +96,7 @@ router.get("/:longitude/:latitude/:distance/:limit", async (req, res, next)=>{
 })
 
 // PUT "/api/restaurants/like"
-router.put("/like", async (req, res, next)=>{
+router.put("/like", verifyToken, async (req, res, next)=>{
     try {
         const {restaurantId, userId} = req.body
         const response = await Restaurant.updateOne(
@@ -103,6 +104,17 @@ router.put("/like", async (req, res, next)=>{
             {$addToSet: {likes: userId}}
         )
         res.status(200).json({message: `Restaurante añadido a tu lista de favoritos`})
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
+
+// GET "/api/restaurants/:restaurantId/time_slots"
+router.get('/:restaurantId/time_slots', async (req, res, next) =>{
+    try {
+        const response = await Restaurant.findById(req.params.restaurantId, "timeSlots capacity")
+        res.status(200).json(response)
     } catch (error) {
         console.log(error)
         next(error)

@@ -20,7 +20,7 @@ const userSchema = new Schema(
     timeSlots: {type: [String], default: ["20:00", "21:00", "22:00", "23:00", "00:00"]},
     isDiscount: {type: Boolean, default: false},
     discountAmount: {type: Number, default: 0.0},
-    likes: {type: [Schema.Types.ObjectId], ref: "User", default: []}
+    likes: {type: [Schema.Types.ObjectId], ref: "User", default:[]}
   },
   {
     timestamps: true

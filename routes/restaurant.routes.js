@@ -24,6 +24,17 @@ router.get("/:restaurantId", async (req, res, next)=>{
     }
 })
 
+// // GET "/api/restaurants/:restaurantId/reviews" => Ver un restaurante especifico
+// router.get("/:restaurantId/reviews", async (req, res, next)=>{
+//     try {
+//         const response = await Restaurant.findById(req.params.restaurantId).populate("review");
+//         res.json(response)
+//     } catch (error) {
+//         console.log(error);
+//         next(error);
+//     }
+// })
+
 // POST "/api/restaurants" => Crear un restaurante
 router.post("/", async (req, res, next)=>{
     const {profileImage, images, name, description, coords, rating, price, address, city, country, zip_code, categories, capacity, timeSlots, isDiscount, discountAmount} = req.body
@@ -82,4 +93,20 @@ router.get("/:longitude/:latitude/:distance/:limit", async (req, res, next)=>{
         next(error)
     }
 })
+
+// PUT "/api/restaurants/like"
+router.put("/like", async (req, res, next)=>{
+    try {
+        const {restaurantId, userId} = req.body
+        const response = await Restaurant.updateOne(
+            {_id: restaurantId},
+            {$addToSet: {likes: userId}}
+        )
+        res.status(200).json({message: `Restaurante añadido a tu lista de favoritos`})
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
+
 module.exports = router

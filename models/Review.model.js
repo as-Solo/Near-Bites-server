@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const userSchema = new Schema(
+const reviewSchema = new Schema(
   {
     description: {type: String,  required: true},
     rating: {type: Number, default: 3},
@@ -12,6 +12,6 @@ const userSchema = new Schema(
   }
 );
 
-const Review = model("Review", userSchema);
+const Review = model("Review", reviewSchema);
 
 module.exports = Review;

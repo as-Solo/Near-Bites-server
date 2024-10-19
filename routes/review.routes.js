@@ -13,6 +13,21 @@ router.get('/', async (req, res, next)=>{
     }
 })
 
+// GET "/api/reviews/:restaurantId/with_users" => Ver todas las reseñas
+router.get('/:restaurantId/with_users', async (req, res, next)=>{
+    try {
+        const response = await Review.find({restaurant:req.params.restaurantId})
+        .populate({
+            path:"user",
+            select:"username image"
+        })
+        res.json(response)
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+})
+
 // GET "/api/reviews/:reviewId" => Ver una reseña
 router.get('/:reviewId', async (req, res, next)=>{
     try {

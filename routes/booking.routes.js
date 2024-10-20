@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
 const Booking = require("../models/Booking.model")
+const User = require("../models/User.model.js");
+const Restaurant = require("../models/Restaurant.model.js");
 
 // GET "/api/bookings" => Ver todas las reservas
 router.get('/', async (req, res, next)=>{
@@ -31,6 +33,18 @@ router.get('/:bookingId', async (req, res, next)=>{
 // POST "/api/bookings" => Crear una reserva
 router.post('/', async (req, res, next)=>{
     const { partySize, day, startHour, user, restaurant } = req.body
+    const foundUser = await User.findOne({_id:user});
+    const foundRestaurant = await Restaurant.findOne({_id:restaurant});
+    if (!foundUser || !foundRestaurant){
+        res.status(400).json({message: "No se ha podido realizar la reserva."});
+        return;
+    }
+
+    if (!foundRestaurant.timeSlots.includes(startHour)){
+        res.status(400).json({message: "No ofrecemos servicio en ese horario."});
+        return;
+    }
+
     //* const slot = Restaurant.findById(restaurant)
     //* if (!slot.timeSlot.includes(startHour)) => message: "No damos servicio en ese turno"
     if( !partySize || !day || !startHour || !user || !restaurant){
@@ -58,8 +72,8 @@ router.delete('/:bookingId', async (req, res, next)=>{
     }
 })
 
-
-router.get('/:restaurantId/:day', async (req, res, next)=>{
+// GET "/api/bookings/:restaurantId/:day" => Ver todas las reservas de un restaurante en un dia en concreto
+router.get('/restaurants/:restaurantId/:day', async (req, res, next)=>{
     const {restaurantId, day} = req.params
    
     try {
@@ -70,5 +84,21 @@ router.get('/:restaurantId/:day', async (req, res, next)=>{
         next(error);
     }
 })
+
+// GET "/api/bookings/users/:userId" => Ver todas las reservas de un usuario
+router.get('/users/:userId', async (req, res, next)=>{
+    const { userId } = req.params
+    try {
+        const response = await Booking.find({user:userId}).populate({
+            path:"restaurant",
+            select: "name address rating profileImage"
+        })
+        res.json(response)
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+})
+
 
 module.exports = router

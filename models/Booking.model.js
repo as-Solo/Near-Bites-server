@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const userSchema = new Schema(
+const bookingSchema = new Schema(
   {
     partySize: {type: Number, required: true},
     day: {type: Date, required: true},
@@ -13,6 +13,6 @@ const userSchema = new Schema(
   }
 );
 
-const Booking = model("Booking", userSchema);
+const Booking = model("Booking", bookingSchema);
 
 module.exports = Booking;

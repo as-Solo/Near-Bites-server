@@ -126,4 +126,15 @@ router.put("/unfav/:restaurantId", verifyToken, async (req, res, next)=>{
     }
 })
 
+// GET "/api/users/pinimage" => Recuperar la imagen de un usuario
+router.get("/pinimage", verifyToken, async (req, res, next)=>{
+    try {
+        const response = await User.findById(req.payload._id, 'image')
+        res.json(response)
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+})
+
 module.exports = router

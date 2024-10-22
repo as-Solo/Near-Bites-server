@@ -137,4 +137,15 @@ router.get("/pinimage", verifyToken, async (req, res, next)=>{
     }
 })
 
+// GET "/api/users/owner" => Ver la listas de restaurantes de un usuario owner
+router.get("/owner", verifyToken, async (req, res, next)=>{
+    try {
+        const response = await User.findById(req.payload._id, 'restaurantsOwned').populate("restaurantsOwned")
+        res.json(response)
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+})
+
 module.exports = router

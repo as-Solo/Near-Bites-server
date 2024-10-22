@@ -13,7 +13,7 @@ const userSchema = new Schema(
     rol: {type: String, enum:["user", "owner"], default: "user"},
     favourites: { type: [Schema.Types.ObjectId], ref: "Restaurant", default:[]},
     wishlist: { type: [Schema.Types.ObjectId], ref: "Restaurant", default:[]},
-    // restaurantOwned: {type: [Schema.Types.ObjectId], ref: "Restaurant", default: []}
+    restaurantsOwned: {type: [Schema.Types.ObjectId], ref: "Restaurant", default: []}
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`    

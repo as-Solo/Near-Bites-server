@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
 const Review = require("../models/Review.model")
+const verifyToken = require("../middlewares/auth.middlewares");
+
 
 // GET "/api/reviews" => Ver todas las reseñas
 router.get('/', async (req, res, next)=>{
@@ -21,6 +23,7 @@ router.get('/:restaurantId/with_users', async (req, res, next)=>{
             path:"user",
             select:"username image"
         })
+        .sort({ createdAt: -1 })
         res.json(response)
     } catch (error) {
         console.log(error);
@@ -40,8 +43,9 @@ router.get('/:reviewId', async (req, res, next)=>{
 })
 
 // POST "/api/reviews" => Crear una reseña
-router.post('/', async (req, res, next)=>{
-    const { description, rating, user, restaurant } = req.body
+router.post('/', verifyToken, async (req, res, next)=>{
+    const { description, rating, restaurant } = req.body
+    const user = req.payload._id
     try {
         const response = await Review.create({description, rating, user, restaurant})
         res.json(response);
@@ -64,7 +68,7 @@ router.patch('/:reviewId', async (req, res, next)=>{
 })
 
 // DELETE "/api/reviews/:reviewId" => Eliminar una reseña
-router.delete('/:reviewId', async (req, res, next)=>{
+router.delete('/:reviewId', verifyToken, async (req, res, next)=>{
     try {
         const response = await Review.findByIdAndDelete(req.params.reviewId)
         res.json({message: `La reseña '${response.description}' ha sido eliminada`})

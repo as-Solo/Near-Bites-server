@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const Booking = require("../models/Booking.model")
 const User = require("../models/User.model.js");
 const Restaurant = require("../models/Restaurant.model.js");
+const verifyToken = require("../middlewares/auth.middlewares");
 
 // GET "/api/bookings" => Ver todas las reservas
 router.get('/', async (req, res, next)=>{
@@ -31,8 +32,9 @@ router.get('/:bookingId', async (req, res, next)=>{
 //todo y ya que estas, valida que exista el restaurante y el user, que no te cuesta nada
 //todo metele un verifyToken
 // POST "/api/bookings" => Crear una reserva
-router.post('/', async (req, res, next)=>{
-    const { partySize, day, startHour, user, restaurant } = req.body
+router.post('/', verifyToken, async (req, res, next)=>{
+    const { partySize, day, startHour, restaurant } = req.body
+    const user = req.payload._id
     const foundUser = await User.findOne({_id:user});
     const foundRestaurant = await Restaurant.findOne({_id:restaurant});
     if (!foundUser || !foundRestaurant){
@@ -62,7 +64,7 @@ router.post('/', async (req, res, next)=>{
 })
 
 // DELETE "/api/bookings" => Eliminar una reserva
-router.delete('/:bookingId', async (req, res, next)=>{
+router.delete('/:bookingId', verifyToken, async (req, res, next)=>{
     try {
         const response = await Booking.findByIdAndDelete(req.params.bookingId)
         res.json({message: `La reserva ha sido eliminada`})
@@ -86,13 +88,15 @@ router.get('/restaurants/:restaurantId/:day', async (req, res, next)=>{
 })
 
 // GET "/api/bookings/users/:userId" => Ver todas las reservas de un usuario
-router.get('/users/:userId', async (req, res, next)=>{
-    const { userId } = req.params
+// router.get('/users/:userId', async (req, res, next)=>{
+router.get('/users/bookingList', verifyToken, async (req, res, next)=>{
+    const userId = req.payload._id
     try {
         const response = await Booking.find({user:userId}).populate({
             path:"restaurant",
             select: "name address rating profileImage"
         })
+        .sort({ day: 1 });
         res.json(response)
     } catch (error) {
         console.log(error);

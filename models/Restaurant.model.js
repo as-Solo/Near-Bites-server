@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-const userSchema = new Schema(
+const restaurantSchema = new Schema(
   {
     profileImage: {type: String, trim: true},
     images: {type: [String], trim: true},
@@ -27,6 +27,6 @@ const userSchema = new Schema(
   }
 );
 
-const Restaurant = model("Restaurant", userSchema);
+const Restaurant = model("Restaurant", restaurantSchema);
 
 module.exports = Restaurant;

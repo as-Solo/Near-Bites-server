@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const mongoose = require("mongoose");
 const Restaurant = require("../models/Restaurant.model");
+const User = require("../models/User.model");
 const verifyToken = require("../middlewares/auth.middlewares");
 
 // GET "/api/restaurants" => Ver todos los restaurantes
@@ -215,6 +216,26 @@ router.post("/filters/dinamicos/:longitude/:latitude/:distance/:limit", async (r
         next(error)
     }
   });
-  
+
+  // PATCH "/api/restaurants/owner/:restaurantId" => permite al propietario del restuarante editarlo
+  router.patch("/owner/:restaurantId", verifyToken, async (req, res, next)=>{
+    const {restaurantId} = req.params
+    const userId = req.payload._id
+    const owner = await User.findById(userId)
+    const {profileImage, categories, images, timeSlots, capacity, isDiscount, discountAmount} = req.body
+    if (owner.restaurantsOwned.includes(restaurantId)){
+      try {
+        const response = await Restaurant.findByIdAndUpdate(restaurantId, {profileImage, categories, images, timeSlots, capacity, isDiscount, discountAmount}, {new:true})
+        res.status(200).json(response)
+      }
+      catch (error) {
+        console.log(error)
+        next(error)  
+      }
+    }
+    else{
+      res.status(401).json({message: "No tienes los permisos necesarios para realizar esta accion"})
+    }
+  })
 
 module.exports = router

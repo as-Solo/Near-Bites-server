@@ -10,7 +10,7 @@ const userSchema = new Schema(
     username: {type: String, unique: true, trim: true, required: [true, 'Username is required.'], default:""},
     image: {type: String, trim: true},
     coords: [String],
-    rol: {type: String, enum:["user", "owner"], default: "user"},
+    rol: {type: String, enum:["user", "owner", "admin"], default: "user"},
     favourites: { type: [Schema.Types.ObjectId], ref: "Restaurant", default:[]},
     wishlist: { type: [Schema.Types.ObjectId], ref: "Restaurant", default:[]},
     restaurantsOwned: {type: [Schema.Types.ObjectId], ref: "Restaurant", default: []}

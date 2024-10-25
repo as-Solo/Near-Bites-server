@@ -27,10 +27,6 @@ router.get('/:bookingId', async (req, res, next)=>{
     }
 })
 
-//todo tienes que checkear que exista el slot en el restaurante startHour debe estar en la lista
-//todo de timeSlot del restaurante
-//todo y ya que estas, valida que exista el restaurante y el user, que no te cuesta nada
-//todo metele un verifyToken
 // POST "/api/bookings" => Crear una reserva
 router.post('/', verifyToken, async (req, res, next)=>{
     const { partySize, day, startHour, restaurant } = req.body

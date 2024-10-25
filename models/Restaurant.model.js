@@ -9,12 +9,10 @@ const restaurantSchema = new Schema(
     coords: {type: [Number], index: "2dsphere", unique: true, trim: true},
     rating: {type: Number, default:0},
     price: {type: Number},
-    //todo si hago un objeto con los siguientes 4 parametros, puedo evaluar un unique en conjunto?
     address: {type: String, trim: true, required: true},
     city: {type: String, trim: true, required: true},
     country: {type: String, trim: true, required: true},
     zip_code: {type: String, trim: true, required: true},
-    //todo En el enum, deberias sacarte las categorias de yelp, por si al final luego lo usas, tener las mismas etiquetas de busqueda
     categories: {type: [String], enum:["hamburguer", "pizza", "mexican", "indian", "spanish"]},
     capacity: {type: Number},
     timeSlots: {type: [String], default: ["20:00", "21:00", "22:00", "23:00", "00:00"]},

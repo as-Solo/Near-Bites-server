@@ -204,8 +204,22 @@ router.post("/filters/dinamicos/:longitude/:latitude/:distance/:limit", async (r
 
   // GET  "/api/restaurants/userlike => conseguir todos los restaurantes con like de un usuario
   router.get("/user/like", verifyToken, async (req, res, next)=>{
-    console.log("Entrando")
+    // console.log("Entrando")
     const userId = req.payload._id
+    console.log(userId)
+    try {
+        const response = await Restaurant.find({ likes: userId })
+        res.status(200).json(response)
+        
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+  });
+
+  router.get("/user/like/:userId", verifyToken, async (req, res, next)=>{
+    // console.log("Entrando")
+    const {userId} = req.params
     console.log(userId)
     try {
         const response = await Restaurant.find({ likes: userId })

@@ -189,7 +189,7 @@ router.put("/follow/:userId", verifyToken, async (req, res, next)=>{
     try {
         const {userId} = req.params
         const loggedUser = req.payload._id
-        const usuario = await User.findById(userId)
+        const usuario = await User.findById(userId, 'username')
         const response = await User.findByIdAndUpdate(
             loggedUser,
             {$addToSet: {follow: userId}}
@@ -206,7 +206,7 @@ router.put("/unfollow/:userId", verifyToken, async (req, res, next)=>{
     try {
         const {userId} = req.params
         const loggedUser = req.payload._id
-        const usuario = await User.findById(userId)
+        const usuario = await User.findById(userId, 'username')
         const response = await User.findByIdAndUpdate(
             loggedUser,
             {$pull: {follow: userId}}
@@ -248,6 +248,120 @@ router.get("/followers", verifyToken, async (req, res, next)=>{
     } catch (error) {
         next(error)
     }
+})
+
+// GET "/api/users/is-accepted/:userId"
+router.get("/is-accepted/:userId", verifyToken, async (req, res, next)=>{
+    const {userId} = req.params
+    const loggedUser = req.payload._id
+    try {
+        const response = await User.findById(userId, 'accepted')
+        if (response.accepted.includes(loggedUser)){
+            res.status(200).json(true)
+        }
+        else{
+            res.status(200).json(false)
+        }
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
+
+// GET "/api/users/is-accepted/:userId"
+router.get("/is-request/:userId", verifyToken, async (req, res, next)=>{
+    const {userId} = req.params
+    const loggedUser = req.payload._id
+    try {
+        const response = await User.findById(userId, 'request')
+        if (response.request.includes(loggedUser)){
+            res.status(200).json(true)
+        }
+        else{
+            res.status(200).json(false)
+        }
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
+
+// PUT "/api/users/request/:userId"
+router.put("/request/:userId", verifyToken, async (req, res, next)=>{
+    try {
+        const {userId} = req.params
+        const loggedUser = req.payload._id
+        const usuario = await User.findById(userId, 'username')
+        const response = await User.findByIdAndUpdate(
+            userId,
+            {$addToSet: {request: loggedUser}}
+        )
+        const accept = await User.findByIdAndUpdate(loggedUser, {
+          $pull: {block: userId, request: userId},
+          $addToSet: {accepted:userId}
+        })
+        res.status(200).json({message: `Solicitud enviada a ${usuario.username}`})
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
+
+// GET "/api/users/request-list"
+router.get("/request-list", verifyToken, async (req, res, next)=>{
+    const userId = req.payload._id
+    try {
+        const response = await User.findById(userId, 'request').populate({
+            path: "request",
+            select: "image username createdAt"
+        })
+        res.status(200).json(response)
+    } catch (error) {
+        console.log(error)
+        next(error)
+    }
+})
+
+
+// PUT "/api/users/request/yes/:userId" => acepta la solicitud de un usuario
+router.put("/request/yes/:userId", verifyToken, async (req, res, next)=>{
+    try {
+      const {userId} = req.params
+      const loggedUser = req.payload._id
+      const usuario = await User.findById(userId, 'username')
+      const response = await User.findByIdAndUpdate(
+        loggedUser,
+        {
+          $pull: {request: userId, block: userId},
+          $addToSet: {accepted: userId},    
+        }
+      )
+      res.status(200).json({message: `Solicitud de ${usuario.username} aceptada`})
+    } catch (error) {
+      console.log(error)
+      next(error)
+    }
+})
+
+// PUT "/api/users/request/no/:userId" => acepta la solicitud de un usuario
+router.put("/request/no/:userId", verifyToken, async (req, res, next)=>{
+  try {
+    const {userId} = req.params
+    const loggedUser = req.payload._id
+    const usuario = await User.findById(userId, 'username')
+    const response = await User.findByIdAndUpdate(
+      loggedUser,
+      {
+        $pull: {request: userId, accepted: userId},
+        $addToSet: {block: userId},
+  
+      }
+    )
+    res.status(200).json({message: `Solicitud de ${usuario.username} rechazada`})
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
 })
 
 module.exports = router

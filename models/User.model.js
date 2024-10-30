@@ -14,7 +14,10 @@ const userSchema = new Schema(
     favourites: { type: [Schema.Types.ObjectId], ref: "Restaurant", default:[]},
     wishlist: { type: [Schema.Types.ObjectId], ref: "Restaurant", default:[]},
     restaurantsOwned: {type: [Schema.Types.ObjectId], ref: "Restaurant", default: []},
-    follow: {type: [Schema.Types.ObjectId], ref: "User", default: []}
+    follow: {type: [Schema.Types.ObjectId], ref: "User", default: []},
+    request: {type: [Schema.Types.ObjectId], ref: "User", default: []},
+    accepted: {type: [Schema.Types.ObjectId], ref: "User", default: []},
+    block: {type: [Schema.Types.ObjectId], ref: "User", default: []}
   },
   {
     // this second object adds extra properties: `createdAt` and `updatedAt`    

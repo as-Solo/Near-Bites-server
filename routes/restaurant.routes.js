@@ -143,13 +143,35 @@ router.get('/:restaurantId/time_slots', async (req, res, next) =>{
 router.get("/unique/categories", async (req, res, next) => {
     try {
       const uniqueCategories = await Restaurant.distinct("categories");
-      
       res.json(uniqueCategories);
     } catch (error) {
       console.log(error);
       next(error);
     }
   });
+
+  // GET "/api/restaurants/unique/categories" => Obtener todas las categorías únicas
+router.get("/unique/categories/:longitude/:latitude/:distance/:limit", async (req, res, next) => {
+  try {
+    const {longitude, latitude, distance, limit} = req.params
+    const uniqueCategories = await Restaurant.distinct("categories", {
+      coords: {
+        $near: {
+          $geometry: {
+            type: "Point",
+            coordinates: [longitude, latitude]
+          },
+          $maxDistance: distance // el valor son metros
+        }
+      }
+    });
+    
+    res.json(uniqueCategories);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
 
 
 // POST "/api/restaurants/filters/dinamicos/:longitude/:latitude/:distance/:limit" => La locura

@@ -25,4 +25,7 @@ router.use("/upload", uploadRoutes);
 const adminsRoutes = require("./admins.routes");
 router.use("/admins", adminsRoutes);
 
+const messagesRoutes = require("./message.routes");
+router.use("/messages", messagesRoutes);
+
 module.exports = router;

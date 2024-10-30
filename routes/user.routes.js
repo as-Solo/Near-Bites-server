@@ -364,4 +364,16 @@ router.put("/request/no/:userId", verifyToken, async (req, res, next)=>{
   }
 })
 
+// GET "/api/users/chat/:userId" => Recuperar la imagen de un usuario
+router.get("/chat/:userId", verifyToken, async (req, res, next)=>{
+    try {
+        const response = await User.findById(req.params.userId, 'image username')
+        res.json(response)
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+})
+
+
 module.exports = router

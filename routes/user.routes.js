@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const User = require("../models/User.model")
 const Booking = require("../models/Booking.model")
 const Review = require("../models/Review.model")
+const Message = require("../models/Message.model")
 const verifyToken = require("../middlewares/auth.middlewares");
 
 
@@ -81,6 +82,8 @@ router.delete("/profile", verifyToken, async(req, res, next)=>{
         try {
             await Review.deleteMany({user: userId});
             await Booking.deleteMany({user: userId});
+            await Message.deleteMany({destinatario: userId});
+            await Message.deleteMany({remitente: userId});
             const response = await User.findByIdAndDelete(req.payload._id)
             res.json({message:`El usuario ${response.name} ha sido eliminado.`})
         } catch (error) {

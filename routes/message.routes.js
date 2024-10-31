@@ -48,8 +48,7 @@ router.get("/group-by/conversation/:userId", verifyToken, async (req, res, next)
     const {userId} = req.params
     const loggedUser = req.payload._id
     const userIdObj = new ObjectId(userId);
-        const loggedUserObj = new ObjectId(loggedUser);
-    console.log(userId, loggedUser)
+    const loggedUserObj = new ObjectId(loggedUser);
     try {
         const messages = await Message.aggregate([
             {
@@ -59,38 +58,32 @@ router.get("/group-by/conversation/:userId", verifyToken, async (req, res, next)
                     { remitente: loggedUserObj, destinatario: userIdObj }
                 ]
               }
-            }
-            ,
+            },
             {
               $addFields: {
                 day: { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } }
               }
-            }
-            ,
+            },
             {
               $sort: { createdAt: 1 }
-            }
-            ,
+            },
             {
               $group: {
                 _id: "$day",
                 messages: { $push: "$$ROOT" }
               }
-            }
-            ,
+            },
             {
               $project: {
                 _id: 0,
                 day: "$_id",
                 messages: 1
               }
-            }
-            ,
+            },
             {
               $sort: { day: 1 }
             }
           ]);
-          console.log(messages)
         res.status(200).json(messages)
     }
     catch (error) {

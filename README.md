@@ -116,6 +116,17 @@ Modelo Reserva
 | PUT         | `/users/unfav/:restaurantId`    |                                                                               | 200          | 400, 401     | Eliminar un restaurante de la lista de deseos                    |
 | GET         | `/users/pinimage`               |                                                                               | 200          | 401          | Recuperar la imagen de un usuario                                 |
 | GET         | `/users/owner`                  |                                                                               | 200          | 401          | Ver la lista de restaurantes de un usuario propietario            |
+| PUT         | `/api/users/follow/:userId`      | -                                        | 200          | 400          | Sigue a un usuario especificado por su ID.                      |
+| PUT         | `/api/users/unfollow/:userId`    | -                                        | 200          | 400          | Deja de seguir a un usuario especificado por su ID.             |
+| GET         | `/api/users/is-following/:userId`| -                                        | 200          | 400          | Comprueba si el usuario autenticado sigue a otro usuario.        |
+| GET         | `/api/users/followers`           | -                                        | 200          | 400          | Cuenta el número de seguidores del usuario autenticado.          |
+| GET         | `/api/users/is-accepted/:userId` | -                                        | 200          | 400          | Comprueba si se ha aceptado a otro usuario.                     |
+| GET         | `/api/users/is-request/:userId`  | -                                        | 200          | 400          | Comprueba si hay una solicitud de amistad pendiente.             |
+| PUT         | `/api/users/request/:userId`     | -                                        | 200          | 400          | Envía una solicitud de amistad a otro usuario.                  |
+| GET         | `/api/users/request-list`         | -                                        | 200          | 400          | Ver la lista de solicitudes de amistad pendientes.              |
+| PUT         | `/api/users/request/yes/:userId` | -                                        | 200          | 400          | Acepta la solicitud de amistad de otro usuario.                 |
+| PUT         | `/api/users/request/no/:userId`  | -                                        | 200          | 400          | Rechaza la solicitud de amistad de otro usuario.                |
+| GET         | `/api/users/chat/:userId`        | -                                        | 200          | 400          | Recupera la imagen y nombre de usuario para el chat.           |
 | GET         | `/restaurants`                   |                                                                               | 200          | 400          | Ver todos los restaurantes                                        |
 | POST        | `/restaurants`                   | {profileImage, images, name, description, coords, rating, price, address, city, country, zip_code, categories, capacity, timeSlots, isDiscount, discountAmount} | 201          | 400          | Crear un nuevo restaurante                                        |
 | GET         | `/restaurants/:restaurantId`     |                                                                               | 200          | 400          | Ver un restaurante específico                                      |
@@ -136,6 +147,10 @@ Modelo Reserva
 | PATCH       | `/reviews/:reviewId`            | {description}                                                                | 200          | 400          | Editar una reseña                                                |
 | DELETE      | `/reviews/:reviewId`            |                                                                               | 200          | 400          | Eliminar una reseña                                              |
 | GET         | `/reviews/:restaurantId/with_users` |                                                                               | 200          | 400          | Ver todas las reseñas con detalles de los usuarios               |
+| GET         | `/messages/conversation/:userId`           |                                                                                                   | 200          | 401          | Obtener la conversación entre el usuario logueado y el destinatario |
+| POST        | `/messages/:userId`                        | {message}                                                                                          | 201          | 400          | Enviar un mensaje a un usuario específico                        |
+| GET         | `/messages/group-by/conversation/:userId` |                                                                                                   | 200          | 401          | Obtener mensajes agrupados por día entre dos usuarios           |
+| GET         | `/messages/chatlist`                       |                                                                                                   | 200          | 401          | Ver la lista de conversaciones abiertas                           |
 
   
 ## Enlaces
